@@ -2,17 +2,16 @@ import React, { useContext, createContext, useState } from 'react';
 import io, { Socket } from 'socket.io-client';
 import { SOCKET_URL } from 'config/default';
 
-// interface MassageType {
-//   message: string;
-//   username: string;
-//   time: string;
-// }
+export interface Position {
+  id: string;
+  x: number;
+  y: number;
+}
 
 interface ContextType {
   socket: Socket;
-  setUsername: Function;
-  messages?: string[];
-  setMessages: Function;
+  positions: Position[];
+  setPositions: Function;
 }
 
 // SOCKET_URLの中身のところに接続を要求
@@ -20,15 +19,14 @@ const socket = io(SOCKET_URL);
 
 const SocketContext = createContext<ContextType>({
   socket,
-  setUsername: () => false,
-  setMessages: () => false,
+  positions: [],
+  setPositions: () => false,
 });
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 const SocketsProvier = (props: any) => {
-  const [messages, setMessages] = useState([]);
-
-  return <SocketContext.Provider value={{ socket, messages, setMessages }} {...props} />;
+  const [positions, setPositions] = useState<Array<{ id: string; x: number; y: number }>>([]);
+  return <SocketContext.Provider value={{ socket, positions, setPositions }} {...props} />;
 };
 
 export const useSockets = (): ContextType => useContext(SocketContext);

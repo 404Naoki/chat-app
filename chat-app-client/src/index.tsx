@@ -7,9 +7,9 @@ import SocketsProvider from './context/socket.context';
 
 ReactDOM.render(
   <SocketsProvider>
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
+    {/* <React.StrictMode> */}
+    <App />
+    {/* </React.StrictMode> */}
   </SocketsProvider>,
   document.getElementById('root')
 );
