@@ -6,11 +6,13 @@ import reportWebVitals from './reportWebVitals';
 import SocketsProvider from './context/socket.context';
 
 ReactDOM.render(
-  <SocketsProvider>
-    {/* <React.StrictMode> */}
-    <App />
-    {/* </React.StrictMode> */}
-  </SocketsProvider>,
+  <React.StrictMode>
+    <SocketsProvider>
+      {/* <React.StrictMode> */}
+      <App />
+      {/* </React.StrictMode> */}
+    </SocketsProvider>
+  </React.StrictMode>,
   document.getElementById('root')
 );
 

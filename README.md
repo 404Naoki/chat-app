@@ -1,3 +1,18 @@
 # chat-app
 
-2022/10/24:値を更新すると前のデータが初期化されてしまう。main の最新を更新している
+# backend 起動方法
+
+※起動前に接続するローカルの postgresql の情報を backend/.env に記載
+
+cd backend\
+npm start
+
+# chat-app-client 起動方法
+
+cd chat-app-client\
+npm start
+
+# chat-app-server 起動方法
+
+cd chat-app-server\
+npm start
