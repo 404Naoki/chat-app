@@ -18,9 +18,9 @@ client.connect();
 // ユーザー情報の全件取得
 app.get("/getAllUser", (_, res) => {
   client
-    .query({ text: "select * from usertable" })
+    .query({ text: "SELECT * FROM usertable" })
     .then((queryRes) => {
-      res.send("ユーザー全件；", queryRes.rows);
+      res.send(queryRes.rows);
     })
     .catch((e) => console.error(e.stack));
 });
