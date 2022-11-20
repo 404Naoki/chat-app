@@ -1,10 +1,12 @@
-import React, { useEffect, useRef, FC, memo } from 'react';
+import axios from 'axios';
+import React, { useEffect, useRef, FC, memo, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { useSockets, Position } from '../context/socket.context';
 
 export const TopPage: FC = memo(() => {
   const { socket, setPositions } = useSockets();
   const localPositions = useRef<Position[]>([]); // useEffect内ではsetPositionsで更新されたpositionsが取得できないので参照用のpositionsを定義
-
+  const history = useHistory();
   /**
    * 更新したpositionリストを更新する関数
    * @param newPosition クリックorキーダウンで更新されたローカルのposition
@@ -20,8 +22,9 @@ export const TopPage: FC = memo(() => {
   };
 
   useEffect(() => {
-    addEventListener('click', (e) => {
-      socket.emit('sendData', updatePositionList({ id: socket.id, x: e.pageX, y: e.pageY }));
+    addEventListener('click', () => {
+      // 初期表示位置を固定
+      socket.emit('sendData', updatePositionList({ id: socket.id, x: 100, y: 100 }));
     });
     addEventListener('keydown', (e) => {
       const localPosition = localPositions.current.find((p) => p.id === socket.id);
@@ -53,6 +56,10 @@ export const TopPage: FC = memo(() => {
   return (
     <>
       <h2>トップページ</h2>
+      クリックするとアバターが表示されます。表示されない場合はアバターを作成してください。
+      <br />
+      新規アバター登録はこちら→
+      <button onClick={() => history.push('/createAvatar')}>新規登録</button>
       <Mark />
     </>
   );
@@ -60,6 +67,17 @@ export const TopPage: FC = memo(() => {
 
 const Mark: React.FC = () => {
   const { positions } = useSockets();
+  const [avatarData, setAvatarData] = useState('');
+  const getAvatar = () => {
+    axios.get('/getAllAvatars').then((res: any) => {
+      // 最新の画像を画面に表示
+      // TODO:ユーザーとアバターを紐づける
+      setAvatarData(res.data.pop().img);
+    });
+  };
+  useEffect(() => {
+    getAvatar(), [];
+  });
   return (
     <>
       {positions != null && (
@@ -67,8 +85,9 @@ const Mark: React.FC = () => {
           {positions.map((p, index) => {
             return (
               <div key={index} style={{ position: 'relative' }}>
-                {/* どのidの■か分かるように「←<idの頭3文字>」つけてるだけ */}
-                <div style={{ position: 'absolute', top: p.y, left: p.x }}>{`■←${p.id.substring(0, 3)}`}</div>
+                <div style={{ position: 'absolute', top: p.y, left: p.x }}>
+                  <img src={avatarData} />
+                </div>
               </div>
             );
           })}
