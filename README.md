@@ -7,12 +7,7 @@
 cd backend\
 npm start
 
-# chat-app-client 起動方法
+# frontend 起動方法
 
-cd chat-app-client\
-npm start
-
-# chat-app-server 起動方法
-
-cd chat-app-server\
+cd frontend\
 npm start

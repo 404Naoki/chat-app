@@ -1,25 +1,23 @@
 import React, { FC, memo, useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import axios, { AxiosResponse } from 'axios';
-import { User } from 'models/user';
+import axios from 'axios';
 
 export const LoginPage: FC = memo(() => {
   const history = useHistory();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const checkUsers = () => {
-    axios.get('/getAllUser').then((res: AxiosResponse<User[]>) => {
-      const exist = res.data.find((user) => {
-        return user.name === username && user.password === password;
-      });
-      if (exist) {
-        // 登録されているユーザーならtop画面に遷移する
-        history.push('/top');
-      } else {
-        alert('登録されていないユーザーです');
-      }
-    });
+  const login = async () => {
+    const req = {
+      name: username,
+      password: password,
+    };
+    try {
+      await axios.post('/api/login', req);
+      history.push('/top'); // ログインに成功するとトップページに移動する
+    } catch (err: any) {
+      alert('ログインに失敗しました。' + err.response.data);
+    }
   };
 
   return (
@@ -31,7 +29,7 @@ export const LoginPage: FC = memo(() => {
       パスワード：
       <input onChange={(e) => setPassword(e.target.value)} />
       <br />
-      <button onClick={() => checkUsers()}>Login</button>
+      <button onClick={() => login()}>Login</button>
       <br />
       <br />
       新規ユーザー登録はこちら→

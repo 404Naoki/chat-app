@@ -1,0 +1,44 @@
+### 登録済みユーザー
+POST http://localhost:8888/api/login HTTP/1.1
+content-type: application/json
+
+{
+    "name": "aaa",
+    "password": "bbb"
+}
+
+
+### 未登録ユーザー
+POST http://localhost:8888/login HTTP/1.1
+content-type: application/json
+
+{
+    "name": "unknown",
+    "password": "unknown"
+}
+
+
+### アバター登録
+POST http://localhost:8888/api/registerAvatar HTTP/1.1
+content-type: application/json
+
+{
+    "img": "avatardata"
+}
+
+### アバター取得
+GET http://localhost:8888/api/getAvatar
+
+
+### 認証確認
+
+
+
+GET http://localhost:8888/cfm
+
+
+
+###
+
+GET http://localhost:8888/logout
+

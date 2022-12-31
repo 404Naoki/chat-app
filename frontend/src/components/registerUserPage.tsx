@@ -7,12 +7,14 @@ export const RegisterUserPage: FC = memo(() => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  const registerUser = () => {
-    axios.post(`/registerUser`, { username: username, password: password }).then((res) => {
-      console.log(res.data);
-    });
-    alert(`${username}を登録しました`);
-    history.push('/');
+  const registerUser = async () => {
+    try {
+      await axios.post(`/api/registerUser`, { name: username, password: password });
+      alert(`${username}を登録しました`);
+      history.push('/');
+    } catch (err: any) {
+      alert(err.response.data);
+    }
   };
 
   return (

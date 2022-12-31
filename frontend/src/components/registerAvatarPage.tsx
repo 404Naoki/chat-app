@@ -1,4 +1,4 @@
-import React, { FC, memo, useState } from 'react';
+import React, { FC, memo, useEffect, useState } from 'react';
 import html2canvas from 'html2canvas';
 import axios from 'axios';
 import { useHistory } from 'react-router-dom';
@@ -8,8 +8,21 @@ export const RegisterAvatarPage: FC = memo(() => {
   const [currentColor, setCurrentColor] = useState('black'); // 選択中のカラー
   const [drawnData, setDrawnData] = useState(new Array<string>(187).fill('transparent')); // お絵かき中の色データ
   const [drawnAvatar, setDrawnAvatar] = useState(''); // 出来上がった画像データを格納する
+  const [user, setUser] = useState();
   const [border, setBorder] = useState('1px solid #999'); // お絵かきスペースのBorder
   const history = useHistory();
+
+  useEffect(() => {
+    // 画面表示時にセッション取得
+    // ログイン済みかどうかの確認をする
+    // フロントのRouterでまとめて先に確認できそうなら嬉しい
+    axios
+      .get('/api/cfm')
+      .then((res) => setUser(res.data))
+      .catch(() => {
+        history.push('/');
+      });
+  });
   const SaveImg = () => {
     const elem = document.querySelector<HTMLElement>('#pic');
     {
@@ -20,7 +33,7 @@ export const RegisterAvatarPage: FC = memo(() => {
           setDrawnAvatar(downloadEle.toString());
           console.log('保存した画像データ：', downloadEle.toString());
           // 画像データをStringでDBに保存
-          axios.post(`/registerAvatar`, { img: downloadEle.toString() }).then((res) => {
+          axios.post(`/api/registerAvatar`, { img: downloadEle.toString() }).then((res) => {
             console.log(res.data);
           });
         });
