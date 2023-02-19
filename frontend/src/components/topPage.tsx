@@ -6,6 +6,7 @@ import { useSockets, Position } from '../context/socket.context';
 export const TopPage: FC = memo(() => {
   const { socket, setPositions } = useSockets();
   const [user, setUser] = useState();
+  const [message, setMessage] = useState('');
   const localPositions = useRef<Position[]>([]); // useEffect内ではsetPositionsで更新されたpositionsが取得できないので参照用のpositionsを定義
   const history = useHistory();
   /**
@@ -57,6 +58,11 @@ export const TopPage: FC = memo(() => {
       });
     window.addEventListener('click', () => click());
     window.addEventListener('keydown', (e) => keydown(e));
+
+    socket.on('receive message', (userId: string, receivedMessage: string) => {
+      console.log(userId, receivedMessage);
+    });
+
     return () => {
       // イベントの設定解除
       // TODO:removeと書いているけどイベント削除できてなくて画面遷移後も各イベントが残ったままになってる
@@ -76,6 +82,17 @@ export const TopPage: FC = memo(() => {
     }
   });
 
+  const handleMessageChange = (event: any) => {
+    setMessage(event.target.value);
+    console.log(event.target.value);
+  };
+
+  const handleMessageSubmit = () => {
+    socket.emit('send message', message);
+    console.log(message);
+    setMessage('');
+  };
+
   return (
     <>
       <h2>トップページ</h2>
@@ -87,6 +104,13 @@ export const TopPage: FC = memo(() => {
       新規アバター登録はこちら→
       <button onClick={() => history.push('/createAvatar')}>新規登録</button>
       <hr />
+      <form>
+        <label>
+          massage:
+          <input type="text" value={message} onChange={(event) => handleMessageChange(event)} />
+        </label>
+        <input type="buttom" value="send" onClick={() => handleMessageSubmit()} />
+      </form>
       <Mark />
     </>
   );

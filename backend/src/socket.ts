@@ -16,6 +16,12 @@ const socket = ({ io }: { io: Server }) => {
       // 接続済みのクライアントにdata送信
       io.emit('receiveData', data);
     });
+
+    // チャット受信して全体宛に送信
+    socket.on('send message', (message) => {
+      console.log(socket.id, message);
+      socket.emit('receive message', socket.id, message);
+    });
   });
 };
 
